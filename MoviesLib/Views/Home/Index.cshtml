@@ -1,0 +1,100 @@
+﻿@*@model IEnumerable<HomeViewModel>*@
+@*@model IEnumerable<PosterInfo>*@
+
+@model PagedResult<HomeViewModel>
+
+@{
+    ViewBag.Title = "Фильмы";
+}
+
+<h1> @Model.PageTitle</h1>
+
+<table class="table ">
+    <tbody>
+        @foreach (var movie in Model.Results)
+        {
+            <tr class="bg-info ">
+                <td rowspan="6" class="align-middle text-center">
+                    <img src="data:image;base64,@System.Convert.ToBase64String(movie.Poster)" height="200" width="200">
+                </td> 
+            </tr>
+            <tr class="bg-info">
+                <td height="30">
+                    <h4>
+                        @if (@User.Identity.Name != null && @User.Identity.Name.ToLower() == @movie.User.ToLower())
+                        {
+                            <a asp-action="Edit" asp-controller="Movie"  asp-route-username="@movie.User" asp-route-moveid="@movie.ID" class="text-dark">@movie.Title</a>
+                        }
+                        else
+                        {
+                            @movie.Title
+                        }
+                    </h4>
+                </td>
+            </tr>
+            <tr class="bg-info">
+                <td height="30">@movie.Year</td>
+            </tr>
+            <tr class="bg-info">
+                <td height="30">@movie.Director</td>
+            </tr>
+            <tr class="bg-info">
+                <td height="80">@movie.Description</td>
+            </tr>
+            <tr class="bg-info">
+                <td height="30">@movie.User</td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+<h3 class="text-center"> Страница @Model.CurrentPage</h3>
+
+
+<div>
+    <ul class="pagination">
+        <li class="page-item @(!Model.ShowFirst? "disabled":"")">
+            @if (Model.CurrentUser != "All")
+            {
+                <a asp-action="MyMovies" asp-controller="Home" asp-route-page="1" asp-route-signin="@Model.CurrentUser" class="page-link">Первый</a>
+            }
+            else
+            {
+                <a asp-action="index" asp-controller="Home" asp-route-page="1" class="page-link">Первый</a>
+            }
+        </li>
+
+        <li class="page-item @(!Model.ShowPrevious? "disabled":"")">
+            @if (Model.CurrentUser != "All")
+            {
+                <a asp-action="MyMovies" asp-controller="Home" asp-route-page="@(Model.CurrentPage - 1)" asp-route-signin="@Model.CurrentUser" class="page-link">Предыдущий</a>
+            }
+            else
+            {
+                <a asp-action="index" asp-controller="Home" asp-route-page="@(Model.CurrentPage - 1)" class="page-link">Предыдущий</a>
+            }
+        </li>
+        <li class="page-item  @(!Model.ShowNext? "disabled":"")">
+            @if (Model.CurrentUser != "All")
+            {
+                <a asp-action="MyMovies" asp-controller="Home" asp-route-page="@(Model.CurrentPage + 1)" asp-route-signin="@Model.CurrentUser" class="page-link">Следущий</a>
+            }
+            else
+            {
+                <a asp-action="index" asp-controller="Home" asp-route-page="@(Model.CurrentPage + 1)" class="page-link">Следущий</a>
+            }
+        </li>
+
+        <li class="page-item  @(!Model.ShowLast? "disabled":"")">
+            @if (Model.CurrentUser != "All")
+            {
+                <a asp-action="MyMovies" asp-controller="Home" asp-route-page="@Model.PageCount" asp-route-signin="@Model.CurrentUser" class="page-link">Последний</a>
+            }
+            else
+            {
+                <a asp-action="index" asp-controller="Home" asp-route-page="@Model.PageCount" class="page-link">Последний</a>
+            }
+        </li>
+    </ul>
+</div>

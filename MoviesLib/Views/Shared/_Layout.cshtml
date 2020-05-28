@@ -1,0 +1,78 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> signInManager;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <a class="navbar-brand"  asp-action="index" asp-controller="Home"><img class="icon" src="~/img/FILE - MOVIE.png" width="48" height="48"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto">
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item ">
+                            <a class="nav-link" asp-action="add" asp-controller="movie">Добавить <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link" asp-action="mylist" asp-controller="movie">Мои фильмы <span class="sr-only">(current)</span></a>
+                        </li>
+                    }
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item">
+                            <form method="post" asp-action="logout" asp-controller="account">
+                                <button type="submit" class="nav-link btn btn-link py-0" style="width:auto">
+                                    Выйти @User.Identity.Name
+                                </button>
+                            </form>
+                            @*<a asp-action="signin" asp-controller="account" class="nav-link">Войти</a>*@
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a asp-action="register" asp-controller="account" class="nav-link">Регистрация</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="login" asp-controller="account" class="nav-link">Войти</a>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        <div class="container mt-3" >
+            <div class="jumbotron">
+                @RenderBody()
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="container bg-dark text-white">
+        <img class="icon" src="~/img/icon.png">
+        <span>
+            <strong> &copy; 2020 Все права защищены</strong> &middot; Уколов Д. А. &middot; Тестовое задание
+        </span>
+    </footer>
+    <script type="text/javascript" src="~/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="~/js/bootstrap.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
